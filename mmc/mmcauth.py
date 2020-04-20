@@ -6,6 +6,7 @@ import requests
 
 from traitlets import Bool
 from tornado import gen
+from tornado import web
 from requests import ConnectionError
 
 from jupyterhub.auth import Authenticator
@@ -43,7 +44,7 @@ class MMCAuthenticateHandler(BaseHandler):
         REQUEST_URL_DEV = "https://newton-dev-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
         REQUEST_URL_PROD = "https://newton-prod-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
 
-        try
+        try:
             rsp = requests.get(REQUEST_URL_DEV, verify=False)
             jsonResp = json.loads(rsp.text)
             return jsonResp['data']
