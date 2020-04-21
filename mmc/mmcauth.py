@@ -20,7 +20,7 @@ class MMCAuthenticateHandler(BaseHandler):
 
     Creates a new user with a user id, and auto starts their server
     """
-    def initialize(self, force_new_server, process_user):
+    def initialize(self):
         super().initialize()
 
     @gen.coroutine
