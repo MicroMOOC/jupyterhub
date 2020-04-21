@@ -47,11 +47,11 @@ class MMCAuthenticateHandler(BaseHandler):
         try:
             rsp = requests.get(REQUEST_URL_DEV, verify=False)
             jsonResp = json.loads(rsp.text)
-            if 'success' in resp_json and resp_json['success'] == False:
+            if 'success' in jsonResp and jsonResp['success'] == False:
                 raise web.HTTPError(500, "newton user service connect fail")
-            elif 'success' in resp_json and resp_json['success'] == True:
-                if resp_json['data']:
-                    return resp_json['data']
+            elif 'success' in jsonResp and jsonResp['success'] == True:
+                if jsonResp['data']:
+                    return jsonResp['data']
                 else:
                     return None
         except ConnectionError:
