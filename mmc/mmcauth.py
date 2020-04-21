@@ -55,7 +55,7 @@ class MMCAuthenticateHandler(BaseHandler):
                 else:
                     return None
         except ConnectionError:
-            raise web.HTTPError(500, "newton user service connect fail")
+            raise web.HTTPError(401, "newton user not found")
 
 class MMCAuthenticator(Authenticator):
     """
