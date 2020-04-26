@@ -9,9 +9,9 @@ from tornado import gen
 from tornado import web
 from requests import ConnectionError
 
-from jupyterhub.auth import Authenticator
-from jupyterhub.handlers import BaseHandler
-from jupyterhub.utils import url_path_join
+from .auth import Authenticator
+from .handlers import BaseHandler
+from .utils import url_path_join
 
 
 class MMCAuthenticateHandler(BaseHandler):
