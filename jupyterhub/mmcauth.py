@@ -12,6 +12,7 @@ from requests import ConnectionError
 from .auth import Authenticator
 from .handlers import BaseHandler
 from .utils import url_path_join
+from tornado.httputil import url_concat
 
 
 class MMCAuthenticateHandler(BaseHandler):
@@ -41,11 +42,12 @@ class MMCAuthenticateHandler(BaseHandler):
         self.redirect(self.get_next_url(user))
 
     def getUserInfoByToken(self, token):
-        REQUEST_URL_DEV = "https://newton-dev-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
-        REQUEST_URL_PROD = "https://newton-prod-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
+        REQUEST_URL_DEV = "https://newton-dev-samwell.micromooc.com/samwell/api/v1/user/current"
+        REQUEST_URL_PROD = "https://newton-prod-samwell.micromooc.com/samwell/api/v1/user/current"
 
         try:
-            rsp = requests.get(REQUEST_URL_DEV, verify=False)
+            mmc_userinfo_url = url_concat(REQUEST_URL_PROD, {'bearer': token})
+            rsp = requests.get(mmc_userinfo_url, verify=False)
             jsonResp = json.loads(rsp.text)
             if 'success' in jsonResp and jsonResp['success'] == False:
                 raise web.HTTPError(500, "newton user service connect fail")
