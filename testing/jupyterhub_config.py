@@ -7,7 +7,7 @@ to enable testing without administrative privileges.
 c = get_config()  # noqa
 
 from jupyterhub.auth import DummyAuthenticator
-from mmc.mmcauth import MMCAuthenticator
+from jupyterhub.mmcauth import MMCAuthenticator
 
 # c.JupyterHub.authenticator_class = DummyAuthenticator
 c.JupyterHub.authenticator_class = MMCAuthenticator
