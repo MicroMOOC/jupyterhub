@@ -7,7 +7,7 @@ to enable testing without administrative privileges.
 c = get_config()  # noqa
 
 from jupyterhub.auth import DummyAuthenticator
-from jupyterhub.mmcauth import MMCAuthenticator
+from jupyterhub.mmcauth import MMCAuthenticator, MMCAuthenticateHandler
 
 # c.JupyterHub.authenticator_class = DummyAuthenticator
 c.JupyterHub.authenticator_class = MMCAuthenticator
@@ -18,3 +18,5 @@ c.JupyterHub.authenticator_class = MMCAuthenticator
 from jupyterhub.spawner import SimpleLocalProcessSpawner
 
 c.JupyterHub.spawner_class = SimpleLocalProcessSpawner
+
+c.MMCAuthenticator.mmc_userinfo_url = 'https://newton-dev-samwell.micromooc.com/samwell/api/v1/user/current'

@@ -2,12 +2,14 @@
 
 import uuid
 import json
+import os
 import requests
 
-from traitlets import Bool
+from traitlets import Unicode, Bool
 from tornado import gen
 from tornado import web
 from requests import ConnectionError
+from tornado.httputil import url_concat
 
 from .auth import Authenticator
 from .handlers import BaseHandler
@@ -20,8 +22,10 @@ class MMCAuthenticateHandler(BaseHandler):
 
     Creates a new user with a user id, and auto starts their server
     """
-    def initialize(self):
+
+    def initialize(self, mmc_userinfo_url):
         super().initialize()
+        self.mmc_userinfo_url = mmc_userinfo_url
 
     @gen.coroutine
     def get(self):
@@ -41,11 +45,12 @@ class MMCAuthenticateHandler(BaseHandler):
         self.redirect(self.get_next_url(user))
 
     def getUserInfoByToken(self, token):
-        REQUEST_URL_DEV = "https://newton-dev-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
-        REQUEST_URL_PROD = "https://newton-prod-samwell.micromooc.com/samwell/api/v1/user/current?bearer=" + token
-
+        request_url = url_concat(
+            self.mmc_userinfo_url,
+            {'bearer': token}
+        )
         try:
-            rsp = requests.get(REQUEST_URL_DEV, verify=False)
+            rsp = requests.get(request_url, verify=False)
             jsonResp = json.loads(rsp.text)
             if 'success' in jsonResp and jsonResp['success'] == False:
                 raise web.HTTPError(500, "newton user service connect fail")
@@ -69,9 +74,18 @@ class MMCAuthenticator(Authenticator):
     auto_login = True
     login_service = 'MMCLogin'
 
+    mmc_userinfo_url = Unicode(
+        os.getenv('MMC_USERINFO_URL', ''),
+        config=True,
+        help="""""",
+    )
+
     def get_handlers(self, app):
+        extra_settings = {
+          'mmc_userinfo_url': self.mmc_userinfo_url
+        }
         return [
-            ('/mmclogin', MMCAuthenticateHandler)
+            ('/mmclogin', MMCAuthenticateHandler, extra_settings),
         ]
 
     def login_url(self, base_url):
