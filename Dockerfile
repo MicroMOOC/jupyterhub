@@ -69,6 +69,7 @@ RUN apt-get update \
     python3-pycurl \
     nodejs \
     npm \
+    wget \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
