@@ -47,7 +47,7 @@ RUN apt-get update \
 COPY . /src/jupyterhub/
 COPY jupyterhub/ /src/jupyterhub/jupyterhub
 COPY share/ /src/jupyterhub/share
-COPY examples/ /src/jupyterhub/examples
+COPY examples/cull-idle/ /src/jupyterhub/examples/cull-idle
 
 WORKDIR /src/jupyterhub
 RUN python3 -m pip install --upgrade setuptools pip wheel
