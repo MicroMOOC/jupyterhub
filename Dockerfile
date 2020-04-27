@@ -94,7 +94,7 @@ RUN python3 -m pip install --no-cache /tmp/wheelhouse/*
 RUN mkdir -p /srv/jupyterhub/
 WORKDIR /srv/jupyterhub/
 
-COPY --from=builder /src/jupyterhub/examples/cull-idle/cull_idle_servers.py /src/jupyterhub/cull_idle_servers.py
+COPY /src/jupyterhub/examples/cull-idle/cull_idle_servers.py /srv/jupyterhub/cull_idle_servers.py
 
 EXPOSE 8000
 
