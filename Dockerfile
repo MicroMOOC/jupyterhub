@@ -93,6 +93,9 @@ RUN python3 -m pip install --no-cache /tmp/wheelhouse/*
 RUN mkdir -p /srv/jupyterhub/
 WORKDIR /srv/jupyterhub/
 
+# Download script to automatically stop idle single-user servers
+RUN wget https://raw.githubusercontent.com/MicroMOOC/jupyterhub/master/examples/cull-idle/cull_idle_servers.py
+
 EXPOSE 8000
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"

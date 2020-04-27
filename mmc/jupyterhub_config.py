@@ -1,5 +1,7 @@
 from jupyterhub.mmcauth import MMCAuthenticator
 import os
+import sys
+
 
 # c.JupyterHub.authenticator_class = DummyAuthenticator
 c.JupyterHub.authenticator_class = MMCAuthenticator
@@ -36,5 +38,13 @@ c.DockerSpawner.notebook_dir = notebook_dir
 # notebook directory in the container
 c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 
-c.Spawner.mem_limit = '64M'
+c.Spawner.mem_limit = '128M'
 
+# run cull-idle as a service
+c.JupyterHub.services = [
+    {
+        'name': 'cull-idle',
+        'admin': True,
+        'command': [sys.executable, '/srv/jupyterhub/cull_idle_servers.py', '--timeout=60'],
+    }
+]
