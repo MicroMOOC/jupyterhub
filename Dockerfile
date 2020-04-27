@@ -47,6 +47,7 @@ RUN apt-get update \
 COPY . /src/jupyterhub/
 COPY jupyterhub/ /src/jupyterhub/jupyterhub
 COPY share/ /src/jupyterhub/share
+COPY examples/cull-idle/cull_idle_servers.py /src/jupyterhub/examples/cull-idle/cull_idle_servers.py
 
 WORKDIR /src/jupyterhub
 RUN python3 -m pip install --upgrade setuptools pip wheel
@@ -93,8 +94,7 @@ RUN python3 -m pip install --no-cache /tmp/wheelhouse/*
 RUN mkdir -p /srv/jupyterhub/
 WORKDIR /srv/jupyterhub/
 
-# Download script to automatically stop idle single-user servers
-RUN wget https://raw.githubusercontent.com/MicroMOOC/jupyterhub/master/examples/cull-idle/cull_idle_servers.py
+COPY --from=builder /src/jupyterhub/examples/cull-idle/cull_idle_servers.py /src/jupyterhub/cull_idle_servers.py
 
 EXPOSE 8000
 
