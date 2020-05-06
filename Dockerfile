@@ -69,6 +69,7 @@ RUN apt-get update \
     python3-pycurl \
     nodejs \
     npm \
+    wget \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
@@ -92,6 +93,9 @@ RUN python3 -m pip install --no-cache /tmp/wheelhouse/*
 
 RUN mkdir -p /srv/jupyterhub/
 WORKDIR /srv/jupyterhub/
+
+# Download script to automatically stop idle single-user servers
+RUN wget -P /src/jupyterhub https://raw.githubusercontent.com/MicroMOOC/jupyterhub/master/examples/cull-idle/cull_idle_servers.py
 
 EXPOSE 8000
 
