@@ -47,8 +47,6 @@ RUN apt-get update \
 COPY . /src/jupyterhub/
 COPY jupyterhub/ /src/jupyterhub/jupyterhub
 COPY share/ /src/jupyterhub/share
-# SSL CERT FILE
-COPY ssl/ /src/jupyterhub/ssl
 
 WORKDIR /src/jupyterhub
 RUN python3 -m pip install --upgrade setuptools pip wheel
