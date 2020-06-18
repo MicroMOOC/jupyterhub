@@ -5,6 +5,7 @@ import json
 import os
 import requests
 
+from urllib import parse
 from traitlets import Unicode, Bool
 from tornado import gen
 from tornado import web
@@ -33,7 +34,19 @@ class MMCAuthenticateHandler(BaseHandler):
         if not raw_user:
             bearer = self.get_argument('bearer', '')
             if not bearer:
-                raise web.HTTPError(400, "token is missing")
+                nextUrl= self.get_argument('next', '')
+                if not nextUrl:
+                    raise web.HTTPError(400, "token is missing")
+                else:
+                    # get token from next param
+                    nextUrl = parse.unquote(nextUrl)
+                    parsed = parse.urlparse(nextUrl)
+                    querys = parse.parse_qs(parsed.query)
+                    bearerParams= querys.get('bearer')
+                    if not bearerParams:
+                        raise web.HTTPError(400, "token is missing")
+                    else:
+                        bearer = bearerParams[0]
             
             userInfo = self.getUserInfoByToken(bearer)
             if not userInfo or not userInfo['userId']:
