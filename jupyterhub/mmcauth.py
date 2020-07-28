@@ -60,10 +60,12 @@ class MMCAuthenticateHandler(BaseHandler):
             if not userInfo or not userInfo['userId']:
                 raise web.HTTPError(401, "invalid token")
 
+            print('GET USER INFO:', userInfo)
+
             # 用户ID      
             userId = userInfo['userId']
             if app == 'lab':
-                userId = userId + '-' + app
+                userId = userId + '-lab'
 
             print('===================> userId:', userId)
 
