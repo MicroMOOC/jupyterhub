@@ -47,8 +47,6 @@ RUN apt-get update \
 COPY . /src/jupyterhub/
 COPY jupyterhub/ /src/jupyterhub/jupyterhub
 COPY share/ /src/jupyterhub/share
-# SSL CERT FILE
-COPY ssl/ /src/jupyterhub/ssl
 
 WORKDIR /src/jupyterhub
 RUN python3 -m pip install --upgrade setuptools pip wheel
@@ -76,9 +74,9 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 ENV SHELL=/bin/bash \
-    LC_ALL=en_US.UTF-8 \
-    LANG=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8
+    LC_ALL=zh_CN.UTF-8 \
+    LANG=zh_CN.UTF-8 \
+    LANGUAGE=zh_CN.UTF-8
 
 RUN  locale-gen $LC_ALL
 
