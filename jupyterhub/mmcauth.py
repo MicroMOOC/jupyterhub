@@ -37,11 +37,9 @@ class MMCAuthenticateHandler(BaseHandler):
             bearer = self.get_argument('bearer', '')
             # 应用，notebook 或 lab
             app = self.get_argument('app', '')
-            app_log.info('==============>get app 1: %s', app)
             if not bearer:
                 # nextUrl = self.get_argument('next', '')
                 nextUrl = self.get_next_url()
-                app_log.info('==============>get_next_url: %s', nextUrl)
 
                 if not nextUrl:
                     raise web.HTTPError(400, "token is missing")
@@ -56,9 +54,8 @@ class MMCAuthenticateHandler(BaseHandler):
                     else:
                         bearer = bearerParams[0]
                         appParams = querys.get('app')
-                        if not appParams:
+                        if appParams != None:
                             app = appParams[0]
-                            app_log.info('==============>get app 2: %s', app)
 
             userInfo = self.getUserInfoByToken(bearer)
             if not userInfo or not userInfo['userId']:
@@ -68,8 +65,6 @@ class MMCAuthenticateHandler(BaseHandler):
             userId = userInfo['userId']
             if app == 'lab':
                 userId = userId + '-lab'
-
-            app_log.info('==============> userId: %s', userId)
 
             raw_user = self.user_from_username(userId)
             self.set_login_cookie(raw_user)
