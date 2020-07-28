@@ -41,6 +41,7 @@ class MMCAuthenticateHandler(BaseHandler):
             if not bearer:
                 # nextUrl = self.get_argument('next', '')
                 nextUrl = self.get_next_url()
+                app_log.info('==============>get_next_url: %s', nextUrl)
 
                 if not nextUrl:
                     raise web.HTTPError(400, "token is missing")
