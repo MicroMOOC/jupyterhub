@@ -32,7 +32,10 @@ class MMCAuthenticateHandler(BaseHandler):
     def get(self):
         raw_user = yield self.get_current_user()
         if not raw_user:
+            # 认证token
             bearer = self.get_argument('bearer', '')
+            # 应用，notebook 或 lab
+            app = self.get_argument('app', '')
             if not bearer:
                 nextUrl= self.get_argument('next', '')
                 if not nextUrl:
@@ -47,12 +50,20 @@ class MMCAuthenticateHandler(BaseHandler):
                         raise web.HTTPError(400, "token is missing")
                     else:
                         bearer = bearerParams[0]
-            
+                        appParams = querys.get('app')
+                        if not appParams:
+                            app = appParams[0]
+
             userInfo = self.getUserInfoByToken(bearer)
             if not userInfo or not userInfo['userId']:
                 raise web.HTTPError(401, "invalid token")
 
-            raw_user = self.user_from_username(userInfo['userId'])
+            # 用户ID      
+            userId = userInfo['userId']
+            if app == 'lab':
+                userId = userId + '-' + app
+
+            raw_user = self.user_from_username(userId)
             self.set_login_cookie(raw_user)
         user = yield gen.maybe_future(raw_user)
         self.redirect(self.get_next_url(user))
