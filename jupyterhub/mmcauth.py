@@ -36,6 +36,7 @@ class MMCAuthenticateHandler(BaseHandler):
             bearer = self.get_argument('bearer', '')
             # 应用，notebook 或 lab
             app = self.get_argument('app', '')
+            print('==============>get app 1:', app)
             if not bearer:
                 nextUrl= self.get_argument('next', '')
                 if not nextUrl:
@@ -53,6 +54,7 @@ class MMCAuthenticateHandler(BaseHandler):
                         appParams = querys.get('app')
                         if not appParams:
                             app = appParams[0]
+                            print('==============>get app 2:', app)
 
             userInfo = self.getUserInfoByToken(bearer)
             if not userInfo or not userInfo['userId']:
@@ -62,6 +64,8 @@ class MMCAuthenticateHandler(BaseHandler):
             userId = userInfo['userId']
             if app == 'lab':
                 userId = userId + '-' + app
+
+            print('===================> userId:', userId)
 
             raw_user = self.user_from_username(userId)
             self.set_login_cookie(raw_user)
