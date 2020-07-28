@@ -11,6 +11,7 @@ from tornado import gen
 from tornado import web
 from requests import ConnectionError
 from tornado.httputil import url_concat
+from tornado.log import app_log
 
 from .auth import Authenticator
 from .handlers import BaseHandler
@@ -36,9 +37,11 @@ class MMCAuthenticateHandler(BaseHandler):
             bearer = self.get_argument('bearer', '')
             # 应用，notebook 或 lab
             app = self.get_argument('app', '')
-            print('==============>get app 1:', app)
+            app_log.info('==============>get app 1: %s', app)
             if not bearer:
-                nextUrl= self.get_argument('next', '')
+                # nextUrl = self.get_argument('next', '')
+                nextUrl = self.get_next_url()
+
                 if not nextUrl:
                     raise web.HTTPError(400, "token is missing")
                 else:
@@ -54,20 +57,18 @@ class MMCAuthenticateHandler(BaseHandler):
                         appParams = querys.get('app')
                         if not appParams:
                             app = appParams[0]
-                            print('==============>get app 2:', app)
+                            app_log.info('==============>get app 2: %s', app)
 
             userInfo = self.getUserInfoByToken(bearer)
             if not userInfo or not userInfo['userId']:
                 raise web.HTTPError(401, "invalid token")
-
-            print('GET USER INFO:', userInfo)
 
             # 用户ID      
             userId = userInfo['userId']
             if app == 'lab':
                 userId = userId + '-lab'
 
-            print('===================> userId:', userId)
+            app_log.info('==============> userId: %s', userId)
 
             raw_user = self.user_from_username(userId)
             self.set_login_cookie(raw_user)
